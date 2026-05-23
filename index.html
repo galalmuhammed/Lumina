@@ -1,823 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina — A Scent That Lingers</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cormorant+SC:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --noir: #1B1717;
-    --cotton: #EDEBDD;
-    --maroon: #630000;
-    --maroon-light: #8a0000;
-    --cotton-dim: rgba(237,235,221,0.55);
-    --cotton-faint: rgba(237,235,221,0.12);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina — A Scent That Lingers</title>
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--noir);
-    color: var(--cotton);
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Custom cursor */
-  .cursor {
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    pointer-events: none; mix-blend-mode: difference;
-  }
-  .cursor-dot {
-    width: 8px; height: 8px;
-    background: var(--cotton);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 0.08s;
-  }
-  .cursor-ring {
-    position: fixed; top: 0; left: 0; z-index: 9998;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(237,235,221,0.5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
-  }
-
-  /* ─── NAV ─── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 28px 60px;
-    background: linear-gradient(to bottom, rgba(27,23,23,0.95) 0%, transparent 100%);
-    backdrop-filter: blur(0px);
-    transition: background 0.4s, backdrop-filter 0.4s;
-  }
-  nav.scrolled {
-    background: rgba(27,23,23,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(237,235,221,0.08);
-  }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.7rem;
-    font-weight: 300;
-    letter-spacing: 0.12em;
-    color: var(--cotton);
-    text-decoration: none;
-  }
-  .nav-links { display: flex; gap: 44px; list-style: none; }
-  .nav-links a {
-    font-family: 'Lato', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--cotton-dim);
-    text-decoration: none;
-    transition: color 0.25s;
-  }
-  .nav-links a:hover { color: var(--cotton); }
-  .nav-cta {
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cotton); border: 1px solid rgba(237,235,221,0.35);
-    padding: 10px 24px; text-decoration: none;
-    transition: background 0.3s, border-color 0.3s;
-  }
-  .nav-cta:hover { background: var(--maroon); border-color: var(--maroon); }
-
-  /* ─── HERO ─── */
-  #hero {
-    position: relative; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    overflow: hidden;
-    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(99,0,0,0.18) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 80% at 20% 70%, rgba(99,0,0,0.08) 0%, transparent 60%),
-                var(--noir);
-  }
-  .hero-grain {
-    position: absolute; inset: 0; pointer-events: none; z-index: 1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    opacity: 0.04;
-  }
-  .hero-content {
-    position: relative; z-index: 2;
-    text-align: center; padding: 0 20px;
-    animation: heroFade 1.6s ease both;
-  }
-  @keyframes heroFade {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .hero-estd {
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase;
-    color: var(--cotton-dim); margin-bottom: 18px;
-    animation: heroFade 1.6s 0.2s ease both;
-  }
-  .hero-estd-line { width: 36px; height: 1px; background: var(--cotton-dim); }
-
-  .hero-logo-icon {
-    display: block; margin: 0 auto 12px;
-    animation: heroFade 1.6s 0.1s ease both;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(5rem, 14vw, 11rem);
-    font-weight: 300; line-height: 0.88;
-    letter-spacing: -0.01em;
-    color: var(--cotton);
-    animation: heroFade 1.6s 0.3s ease both;
-  }
-  .hero-tagline {
-    font-family: 'Lato', sans-serif;
-    font-size: 0.78rem; letter-spacing: 0.38em;
-    text-transform: uppercase; color: var(--cotton-dim);
-    margin-top: 24px;
-    animation: heroFade 1.6s 0.6s ease both;
-  }
-  .hero-cta {
-    margin-top: 52px; display: inline-block;
-    font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--cotton); border: 1px solid rgba(237,235,221,0.3);
-    padding: 14px 40px; text-decoration: none;
-    transition: background 0.35s, border-color 0.35s, letter-spacing 0.25s;
-    animation: heroFade 1.6s 0.8s ease both;
-  }
-  .hero-cta:hover { background: var(--maroon); border-color: var(--maroon); letter-spacing: 0.3em; }
-  .hero-scroll {
-    position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
-    z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px;
-    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cotton-dim);
-    animation: heroFade 2s 1.2s ease both;
-  }
-  .hero-scroll-line {
-    width: 1px; height: 52px;
-    background: linear-gradient(to bottom, var(--cotton-dim), transparent);
-    animation: scrollPulse 2s infinite;
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.2); }
-  }
-  /* Floating orbs */
-  .orb {
-    position: absolute; border-radius: 50%; pointer-events: none;
-    filter: blur(80px); z-index: 1;
-  }
-  .orb-1 {
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(99,0,0,0.22) 0%, transparent 70%);
-    top: -100px; right: -100px;
-    animation: orbFloat 12s ease-in-out infinite;
-  }
-  .orb-2 {
-    width: 350px; height: 350px;
-    background: radial-gradient(circle, rgba(99,0,0,0.12) 0%, transparent 70%);
-    bottom: 0; left: -80px;
-    animation: orbFloat 15s 3s ease-in-out infinite reverse;
-  }
-  @keyframes orbFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -20px) scale(1.05); }
-    66% { transform: translate(-15px, 15px) scale(0.97); }
-  }
-
-  /* ─── SECTION SHARED ─── */
-  section { padding: 120px 60px; }
-  .section-label {
-    font-size: 0.65rem; letter-spacing: 0.38em; text-transform: uppercase;
-    color: var(--maroon); margin-bottom: 20px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .section-label::before {
-    content: ''; display: inline-block; width: 24px; height: 1px; background: var(--maroon);
-  }
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.6rem, 6vw, 5rem);
-    font-weight: 300; line-height: 1.05;
-    color: var(--cotton);
-  }
-  .section-title em { font-style: italic; color: var(--cotton-dim); }
-
-  /* ─── INTRO ─── */
-  #intro {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-    max-width: 1200px; margin: 0 auto;
-  }
-  .intro-text p {
-    font-size: 1.05rem; line-height: 1.85; color: var(--cotton-dim);
-    margin-top: 28px;
-  }
-  .intro-visual {
-    position: relative; display: flex; align-items: center; justify-content: center;
-    height: 380px;
-  }
-  .intro-circle {
-    width: 260px; height: 260px; border-radius: 50%;
-    border: 1px solid rgba(237,235,221,0.12);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-  }
-  .intro-circle::before {
-    content: ''; position: absolute; inset: -20px;
-    border-radius: 50%; border: 1px solid rgba(99,0,0,0.3);
-    animation: ringPulse 4s ease-in-out infinite;
-  }
-  .intro-circle::after {
-    content: ''; position: absolute; inset: -44px;
-    border-radius: 50%; border: 1px solid rgba(99,0,0,0.12);
-    animation: ringPulse 4s 1s ease-in-out infinite;
-  }
-  @keyframes ringPulse {
-    0%, 100% { transform: scale(1); opacity: 0.6; }
-    50% { transform: scale(1.04); opacity: 1; }
-  }
-  .intro-inner-text {
-    text-align: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 300;
-    line-height: 1.5; color: var(--cotton);
-  }
-  .intro-inner-text span { display: block; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cotton-dim); margin-top: 8px; }
-
-  /* ─── ELEMENTS SECTION ─── */
-  #elements { background: var(--noir); padding: 120px 60px; }
-  .elements-header { text-align: center; margin-bottom: 80px; }
-  .elements-header .section-label { justify-content: center; }
-  .elements-header .section-label::before { display: none; }
-
-  .elements-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
-    max-width: 1300px; margin: 0 auto;
-  }
-  .element-card {
-    position: relative; overflow: hidden;
-    min-height: 500px; display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 48px 52px;
-    transition: transform 0.5s cubic-bezier(.22,.68,0,1.2);
-    cursor: none;
-  }
-  .element-card::before {
-    content: ''; position: absolute; inset: 0;
-    transition: opacity 0.5s;
-  }
-  .element-card:hover { transform: scale(1.012); z-index: 2; }
-
-  /* Earth */
-  .card-earth { background: linear-gradient(145deg, #1e1a14 0%, #2a2018 100%); }
-  .card-earth::before { background: radial-gradient(ellipse at 80% 20%, rgba(120,80,30,0.25) 0%, transparent 60%); }
-  /* Water */
-  .card-water { background: linear-gradient(145deg, #101820 0%, #1a2a30 100%); }
-  .card-water::before { background: radial-gradient(ellipse at 20% 80%, rgba(30,80,120,0.2) 0%, transparent 60%); }
-  /* Wind */
-  .card-wind { background: linear-gradient(145deg, #181818 0%, #222 100%); }
-  .card-wind::before { background: radial-gradient(ellipse at 70% 30%, rgba(180,180,160,0.1) 0%, transparent 60%); }
-  /* Fire */
-  .card-fire { background: linear-gradient(145deg, #1a0a00 0%, #2a1000 100%); }
-  .card-fire::before { background: radial-gradient(ellipse at 30% 70%, rgba(180,60,0,0.25) 0%, transparent 60%); }
-
-  .card-bg-icon {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 14rem; opacity: 0.05;
-    font-family: 'Cormorant Garamond', serif; font-weight: 300;
-    pointer-events: none; transition: opacity 0.4s, transform 0.6s;
-    user-select: none; line-height: 1;
-  }
-  .element-card:hover .card-bg-icon { opacity: 0.09; transform: translate(-50%, -52%) scale(1.06); }
-
-  .card-accent {
-    position: absolute; top: 40px; right: 48px;
-    font-size: 0.6rem; letter-spacing: 0.32em; text-transform: uppercase;
-    color: rgba(237,235,221,0.25);
-    writing-mode: vertical-rl; text-orientation: mixed;
-  }
-  .card-icon-svg {
-    position: absolute; top: 44px; left: 52px;
-    width: 52px; height: 52px; opacity: 0.6;
-    transition: opacity 0.3s;
-  }
-  .element-card:hover .card-icon-svg { opacity: 1; }
-
-  .card-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.8rem; color: var(--maroon);
-    letter-spacing: 0.2em; margin-bottom: 12px;
-  }
-  .card-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    font-weight: 300; line-height: 1; color: var(--cotton);
-    transition: letter-spacing 0.4s;
-  }
-  .element-card:hover .card-name { letter-spacing: 0.03em; }
-  .card-subtitle {
-    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--maroon); margin-bottom: 6px; margin-top: 0;
-  }
-  .card-tagline {
-    font-size: 0.85rem; color: var(--cotton-dim); line-height: 1.6;
-    margin-top: 12px; max-width: 300px;
-  }
-  .card-cta {
-    display: inline-flex; align-items: center; gap: 12px;
-    margin-top: 28px; font-size: 0.65rem; letter-spacing: 0.24em;
-    text-transform: uppercase; color: var(--cotton-dim);
-    text-decoration: none; transition: color 0.25s, gap 0.25s;
-  }
-  .card-cta::after { content: '→'; transition: transform 0.25s; }
-  .element-card:hover .card-cta { color: var(--cotton); gap: 18px; }
-  .element-card:hover .card-cta::after { transform: translateX(4px); }
-  .card-divider {
-    width: 40px; height: 1px;
-    background: rgba(237,235,221,0.18); margin: 18px 0;
-  }
-
-  /* ─── PERSONA / ABOUT ─── */
-  #persona {
-    background: var(--cotton);
-    color: var(--noir);
-    text-align: center; padding: 120px 60px;
-    position: relative; overflow: hidden;
-  }
-  #persona .section-label { color: var(--maroon); justify-content: center; }
-  #persona .section-label::before { background: var(--maroon); }
-  #persona .section-title { color: var(--noir); }
-  #persona .section-title em { color: rgba(27,23,23,0.45); }
-  .persona-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 48px; margin-top: 72px; max-width: 1100px; margin-left: auto; margin-right: auto;
-    text-align: left;
-  }
-  .persona-item { border-top: 1px solid rgba(27,23,23,0.15); padding-top: 28px; }
-  .persona-item-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem; font-weight: 300;
-    color: var(--maroon); line-height: 1;
-    margin-bottom: 16px;
-  }
-  .persona-item-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem; font-weight: 400;
-    color: var(--noir); margin-bottom: 10px;
-  }
-  .persona-item-text {
-    font-size: 0.88rem; line-height: 1.75;
-    color: rgba(27,23,23,0.6);
-  }
-
-  /* ─── COLLECTION SHOWCASE ─── */
-  #collection { padding: 140px 60px; }
-  .collection-inner { max-width: 1300px; margin: 0 auto; }
-  .collection-header { margin-bottom: 80px; }
-  .collection-list { display: flex; flex-direction: column; gap: 0; }
-  .collection-row {
-    display: grid; grid-template-columns: 80px 1fr 1fr auto;
-    align-items: center; gap: 40px;
-    padding: 36px 0;
-    border-top: 1px solid rgba(237,235,221,0.08);
-    transition: background 0.3s, padding-left 0.3s;
-    cursor: none;
-  }
-  .collection-row:last-child { border-bottom: 1px solid rgba(237,235,221,0.08); }
-  .collection-row:hover { background: rgba(237,235,221,0.03); padding-left: 12px; }
-  .col-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem; color: var(--maroon); letter-spacing: 0.15em;
-  }
-  .col-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem; font-weight: 300; color: var(--cotton);
-    transition: letter-spacing 0.3s;
-  }
-  .collection-row:hover .col-name { letter-spacing: 0.05em; }
-  .col-desc { font-size: 0.82rem; color: var(--cotton-dim); line-height: 1.6; }
-  .col-tag {
-    font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--maroon); border: 1px solid rgba(99,0,0,0.4);
-    padding: 6px 16px; white-space: nowrap;
-    transition: background 0.25s;
-  }
-  .collection-row:hover .col-tag { background: var(--maroon); color: var(--cotton); }
-
-  /* ─── COLORS SHOWCASE ─── */
-  #brand-palette {
-    padding: 80px 60px; border-top: 1px solid rgba(237,235,221,0.06);
-    display: flex; align-items: center; justify-content: center; gap: 60px;
-    flex-wrap: wrap;
-  }
-  .palette-label {
-    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--cotton-dim);
-  }
-  .palette-swatches { display: flex; gap: 24px; align-items: center; }
-  .swatch { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-  .swatch-circle {
-    width: 64px; height: 64px; border-radius: 50%;
-    transition: transform 0.3s;
-  }
-  .swatch:hover .swatch-circle { transform: scale(1.12); }
-  .swatch-name { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cotton-dim); }
-  .swatch-hex { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; color: var(--cotton-dim); }
-
-  /* ─── CTA BANNER ─── */
-  #cta-banner {
-    padding: 160px 60px; text-align: center;
-    background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(99,0,0,0.22) 0%, transparent 70%);
-    position: relative; overflow: hidden;
-  }
-  #cta-banner::before {
-    content: 'Lumina';
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(10rem, 25vw, 22rem);
-    font-weight: 300; color: transparent;
-    -webkit-text-stroke: 1px rgba(237,235,221,0.04);
-    letter-spacing: -0.02em; pointer-events: none;
-    white-space: nowrap;
-  }
-  .cta-inner { position: relative; z-index: 2; }
-  .cta-subtitle {
-    font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase;
-    color: var(--maroon); margin-bottom: 28px;
-  }
-  .cta-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.4rem, 6vw, 5.5rem);
-    font-weight: 300; line-height: 1.1; color: var(--cotton);
-    margin-bottom: 36px;
-  }
-  .cta-title em { font-style: italic; color: var(--cotton-dim); }
-  .cta-btn {
-    display: inline-block;
-    background: var(--maroon); color: var(--cotton);
-    padding: 16px 52px;
-    font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--maroon);
-    transition: background 0.35s, color 0.35s, letter-spacing 0.25s;
-  }
-  .cta-btn:hover {
-    background: transparent; color: var(--cotton);
-    letter-spacing: 0.32em;
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    padding: 60px;
-    border-top: 1px solid rgba(237,235,221,0.08);
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 40px;
-  }
-  .footer-copy {
-    font-size: 0.7rem; letter-spacing: 0.18em;
-    color: rgba(237,235,221,0.3);
-  }
-  .footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 300; letter-spacing: 0.14em;
-    color: var(--cotton); text-align: center;
-  }
-  .footer-links {
-    display: flex; gap: 32px; justify-content: flex-end; list-style: none;
-  }
-  .footer-links a {
-    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(237,235,221,0.3); text-decoration: none;
-    transition: color 0.25s;
-  }
-  .footer-links a:hover { color: var(--cotton); }
-
-  /* ─── REVEAL ANIMATION ─── */
-  .reveal {
-    opacity: 0; transform: translateY(40px);
-    transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.15s; }
-  .reveal-delay-2 { transition-delay: 0.3s; }
-  .reveal-delay-3 { transition-delay: 0.45s; }
-  .reveal-delay-4 { transition-delay: 0.6s; }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 900px) {
-    nav { padding: 20px 28px; }
-    .nav-links { display: none; }
-    section { padding: 80px 28px; }
-    #intro { grid-template-columns: 1fr; gap: 48px; }
-    .elements-grid { grid-template-columns: 1fr; }
-    .persona-grid { grid-template-columns: 1fr; }
-    .collection-row { grid-template-columns: 40px 1fr; gap: 16px; }
-    .col-desc, .col-tag { display: none; }
-    footer { grid-template-columns: 1fr; text-align: center; }
-    .footer-links { justify-content: center; }
-    #brand-palette { flex-direction: column; gap: 28px; }
-  }
-</style>
+  <!-- Stylesheet — fonts loaded locally via @font-face in style.css -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Cursor -->
-<div class="cursor" id="cursorDot"><div class="cursor-dot"></div></div>
-<div class="cursor-ring" id="cursorRing"></div>
+  <!-- ─── CUSTOM CURSOR ─── -->
+  <div class="cursor" id="cursorDot">
+    <div class="cursor-dot"></div>
+  </div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- NAV -->
-<nav id="navbar">
-  <a href="#hero" class="nav-logo">Lumina</a>
-  <ul class="nav-links">
-    <li><a href="#elements">Elements</a></li>
-    <li><a href="#collection">Collection</a></li>
-    <li><a href="#persona">Our Persona</a></li>
-  </ul>
-  <a href="#collection" class="nav-cta">Shop Now</a>
-</nav>
+  <!-- ─── NAVIGATION ─── -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Lumina</a>
+    <ul class="nav-links">
+      <li><a href="#elements">Elements</a></li>
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#persona">Our Persona</a></li>
+    </ul>
+    <a href="#collection" class="nav-cta">Shop Now</a>
+  </nav>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="hero-grain"></div>
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="hero-grain"></div>
 
-  <div class="hero-content">
-    <!-- Logo icon SVG -->
-    <svg class="hero-logo-icon" width="90" height="60" viewBox="0 0 90 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M45 10 L45 2" stroke="#EDEBDD" stroke-width="0.8" opacity="0.6"/>
-      <path d="M43 2 L45 0 L47 2" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.6"/>
-      <path d="M45 14 L30 38" stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
-      <path d="M45 14 L38 42" stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
-      <path d="M45 14 L45 48" stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
-      <path d="M45 14 L52 42" stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
-      <path d="M45 14 L60 38" stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
-      <text x="14" y="58" font-family="Lato" font-size="7" fill="#EDEBDD" opacity="0.45" letter-spacing="2">ESTD</text>
-      <text x="60" y="58" font-family="Lato" font-size="7" fill="#EDEBDD" opacity="0.45" letter-spacing="2">2026</text>
-    </svg>
+    <div class="hero-content">
+      <!-- Logo icon -->
+      <svg class="hero-logo-icon" width="90" height="60" viewBox="0 0 90 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M45 10 L45 2"       stroke="#EDEBDD" stroke-width="0.8" opacity="0.6"/>
+        <path d="M43 2 L45 0 L47 2"  stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M45 14 L30 38"      stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
+        <path d="M45 14 L38 42"      stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
+        <path d="M45 14 L45 48"      stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
+        <path d="M45 14 L52 42"      stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
+        <path d="M45 14 L60 38"      stroke="#EDEBDD" stroke-width="0.8" opacity="0.5"/>
+        <text x="14" y="58" font-family="Lato" font-size="7" fill="#EDEBDD" opacity="0.45" letter-spacing="2">ESTD</text>
+        <text x="60" y="58" font-family="Lato" font-size="7" fill="#EDEBDD" opacity="0.45" letter-spacing="2">2026</text>
+      </svg>
 
-    <div class="hero-estd">
-      <span class="hero-estd-line"></span>
-      Established 2026
-      <span class="hero-estd-line"></span>
+      <div class="hero-estd">
+        <span class="hero-estd-line"></span>
+        Established 2026
+        <span class="hero-estd-line"></span>
+      </div>
+
+      <h1 class="hero-title">Lumina</h1>
+      <p class="hero-tagline">A scent that lingers</p>
+      <a href="#elements" class="hero-cta">Discover the Collection</a>
     </div>
 
-    <h1 class="hero-title">Lumina</h1>
-    <p class="hero-tagline">A scent that lingers</p>
-    <a href="#elements" class="hero-cta">Discover the Collection</a>
-  </div>
-
-  <div class="hero-scroll">
-    <div class="hero-scroll-line"></div>
-    Scroll
-  </div>
-</section>
-
-<!-- INTRO -->
-<section>
-  <div id="intro">
-    <div class="intro-text reveal">
-      <div class="section-label">Our Philosophy</div>
-      <h2 class="section-title">More than<br><em>a fragrance</em></h2>
-      <p>Lumina perfumes are designed as an extension of your inner self. Each scent is crafted to resonate with who you are — not just how you smell.</p>
-      <p>We have categorized our collection into four primal elements, allowing you to choose the fragrance that aligns with your unique persona and presence.</p>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      Scroll
     </div>
-    <div class="intro-visual reveal reveal-delay-2">
-      <div class="intro-circle">
-        <div class="intro-inner-text">
-          Four Elements<br>One Identity
-          <span>The Elements Collection</span>
+  </section>
+
+  <!-- ─── INTRO / PHILOSOPHY ─── -->
+  <section>
+    <div id="intro">
+      <div class="intro-text reveal">
+        <div class="section-label">Our Philosophy</div>
+        <h2 class="section-title">More than<br><em>a fragrance</em></h2>
+        <p>Lumina perfumes are designed as an extension of your inner self. Each scent is crafted to resonate with who you are — not just how you smell.</p>
+        <p>We have categorized our collection into four primal elements, allowing you to choose the fragrance that aligns with your unique persona and presence.</p>
+      </div>
+      <div class="intro-visual reveal reveal-delay-2">
+        <div class="intro-circle">
+          <div class="intro-inner-text">
+            Four Elements<br>One Identity
+            <span>The Elements Collection</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ELEMENTS -->
-<section id="elements" style="padding: 0;">
-  <div class="elements-header" style="padding: 80px 60px 0;">
-    <div class="section-label reveal" style="justify-content:center;">Introducing</div>
-    <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">The <em>Elements</em></h2>
-  </div>
-
-  <div class="elements-grid" style="margin-top:60px;">
-    <!-- EARTH -->
-    <div class="element-card card-earth reveal">
-      <div class="card-bg-icon">T</div>
-      <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="26" cy="26" r="20" stroke="#EDEBDD" stroke-width="0.6"/>
-        <circle cx="26" cy="26" r="14" stroke="#EDEBDD" stroke-width="0.6"/>
-        <circle cx="26" cy="26" r="8" stroke="#EDEBDD" stroke-width="0.6"/>
-        <circle cx="26" cy="26" r="3" stroke="#EDEBDD" stroke-width="0.6"/>
-      </svg>
-      <span class="card-accent">Earth Element</span>
-      <div class="card-number">01</div>
-      <div class="card-subtitle">Terra</div>
-      <h3 class="card-name">Earth</h3>
-      <div class="card-divider"></div>
-      <p class="card-tagline">The scent of grounded confidence. Deep, rich, and rooted in the earth beneath your feet.</p>
-      <a href="#collection" class="card-cta">Explore Earth</a>
+  <!-- ─── ELEMENTS ─── -->
+  <section id="elements" style="padding: 0;">
+    <div class="elements-header" style="padding: 80px 60px 0;">
+      <div class="section-label reveal" style="justify-content: center;">Introducing</div>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align: center;">The <em>Elements</em></h2>
     </div>
 
-    <!-- WATER -->
-    <div class="element-card card-water reveal reveal-delay-1">
-      <div class="card-bg-icon">W</div>
-      <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 30 Q14 22 20 30 Q26 38 32 30 Q38 22 44 30" stroke="#EDEBDD" stroke-width="0.8" fill="none"/>
-        <path d="M8 22 Q14 14 20 22 Q26 30 32 22 Q38 14 44 22" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <path d="M8 38 Q14 30 20 38 Q26 46 32 38 Q38 30 44 38" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.3"/>
-      </svg>
-      <span class="card-accent">Water Element</span>
-      <div class="card-number">02</div>
-      <div class="card-subtitle">Aqua</div>
-      <h3 class="card-name">Water</h3>
-      <div class="card-divider"></div>
-      <p class="card-tagline">Purity in every breath. Cool, fluid, and endlessly refreshing — like morning dew on still water.</p>
-      <a href="#collection" class="card-cta">Explore Water</a>
-    </div>
+    <div class="elements-grid" style="margin-top: 60px;">
 
-    <!-- WIND -->
-    <div class="element-card card-wind reveal reveal-delay-2">
-      <div class="card-bg-icon">W</div>
-      <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 26 C16 18 20 28 26 20 C32 12 36 24 42 18" stroke="#EDEBDD" stroke-width="0.8" fill="none"/>
-        <path d="M16 34 C20 26 24 34 30 28 C36 22 40 30 44 26" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.55"/>
-        <circle cx="18" cy="18" r="2" stroke="#EDEBDD" stroke-width="0.6"/>
-        <circle cx="34" cy="32" r="1.5" stroke="#EDEBDD" stroke-width="0.6" opacity="0.5"/>
-      </svg>
-      <span class="card-accent">Wind Element</span>
-      <div class="card-number">03</div>
-      <div class="card-subtitle">Zephyr</div>
-      <h3 class="card-name">Wind</h3>
-      <div class="card-divider"></div>
-      <p class="card-tagline">The essence of effortless freedom. Light, airy, and untethered — carrying you wherever the breeze leads.</p>
-      <a href="#collection" class="card-cta">Explore Wind</a>
-    </div>
-
-    <!-- FIRE -->
-    <div class="element-card card-fire reveal reveal-delay-3">
-      <div class="card-bg-icon">I</div>
-      <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M26 44 C26 44 12 34 14 22 C16 16 22 12 22 12 C20 20 24 22 24 22 C22 14 28 8 30 6 C28 18 36 20 34 30 C32 36 38 34 38 34 C36 42 26 44 26 44Z" stroke="#630000" stroke-width="0.8" fill="none"/>
-        <path d="M26 44 C26 44 18 38 20 30 C22 26 26 26 26 26 C24 32 28 34 28 34 C30 28 34 30 32 36 C30 40 26 44 26 44Z" stroke="#630000" stroke-width="0.6" fill="none" opacity="0.6"/>
-      </svg>
-      <span class="card-accent">Fire Element</span>
-      <div class="card-number">04</div>
-      <div class="card-subtitle">Ignite</div>
-      <h3 class="card-name">Fire</h3>
-      <div class="card-divider"></div>
-      <p class="card-tagline">Ignite your inner bold. Fierce, passionate, and unforgettable — a flame that never goes out.</p>
-      <a href="#collection" class="card-cta">Explore Fire</a>
-    </div>
-  </div>
-</section>
-
-<!-- PERSONA -->
-<section id="persona">
-  <div class="section-label reveal">The Lumina Way</div>
-  <h2 class="section-title reveal reveal-delay-1">Crafted for<br><em>your persona</em></h2>
-  <div class="persona-grid">
-    <div class="persona-item reveal">
-      <div class="persona-item-num">01</div>
-      <h3 class="persona-item-title">Identity First</h3>
-      <p class="persona-item-text">Every Lumina fragrance begins with a person, not a formula. We design scents that mirror who you are on the inside and project it beautifully outward.</p>
-    </div>
-    <div class="persona-item reveal reveal-delay-1">
-      <div class="persona-item-num">02</div>
-      <h3 class="persona-item-title">Elemental Harmony</h3>
-      <p class="persona-item-text">Our four-element framework connects ancient wisdom with modern perfumery, creating a language of scent that speaks to your deepest nature.</p>
-    </div>
-    <div class="persona-item reveal reveal-delay-2">
-      <div class="persona-item-num">03</div>
-      <h3 class="persona-item-title">A Scent That Lingers</h3>
-      <p class="persona-item-text">Quality that endures. Our fragrances are formulated to remain — on your skin, in a room, in memory — long after the moment has passed.</p>
-    </div>
-  </div>
-</section>
-
-<!-- COLLECTION LIST -->
-<section id="collection">
-  <div class="collection-inner">
-    <div class="collection-header">
-      <div class="section-label reveal">The Full Range</div>
-      <h2 class="section-title reveal reveal-delay-1">Shop the<br><em>Collection</em></h2>
-    </div>
-    <div class="collection-list">
-      <div class="collection-row reveal">
-        <span class="col-num">01</span>
-        <span class="col-name">Terra — Earth</span>
-        <span class="col-desc">The scent of grounded confidence. Sandalwood, vetiver, and warm amber.</span>
-        <span class="col-tag">Earth</span>
+      <!-- EARTH -->
+      <div class="element-card card-earth reveal">
+        <div class="card-bg-icon">T</div>
+        <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="20" stroke="#EDEBDD" stroke-width="0.6"/>
+          <circle cx="26" cy="26" r="14" stroke="#EDEBDD" stroke-width="0.6"/>
+          <circle cx="26" cy="26" r="8"  stroke="#EDEBDD" stroke-width="0.6"/>
+          <circle cx="26" cy="26" r="3"  stroke="#EDEBDD" stroke-width="0.6"/>
+        </svg>
+        <span class="card-accent">Earth Element</span>
+        <div class="card-number">01</div>
+        <div class="card-subtitle">Terra</div>
+        <h3 class="card-name">Earth</h3>
+        <div class="card-divider"></div>
+        <p class="card-tagline">The scent of grounded confidence. Deep, rich, and rooted in the earth beneath your feet.</p>
+        <a href="#collection" class="card-cta">Explore Earth</a>
       </div>
-      <div class="collection-row reveal reveal-delay-1">
-        <span class="col-num">02</span>
-        <span class="col-name">Aqua — Water</span>
-        <span class="col-desc">Purity in every breath. Sea salt, white musk, and fresh aquatic florals.</span>
-        <span class="col-tag">Water</span>
+
+      <!-- WATER -->
+      <div class="element-card card-water reveal reveal-delay-1">
+        <div class="card-bg-icon">W</div>
+        <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 30 Q14 22 20 30 Q26 38 32 30 Q38 22 44 30" stroke="#EDEBDD" stroke-width="0.8" fill="none"/>
+          <path d="M8 22 Q14 14 20 22 Q26 30 32 22 Q38 14 44 22" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M8 38 Q14 30 20 38 Q26 46 32 38 Q38 30 44 38" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.3"/>
+        </svg>
+        <span class="card-accent">Water Element</span>
+        <div class="card-number">02</div>
+        <div class="card-subtitle">Aqua</div>
+        <h3 class="card-name">Water</h3>
+        <div class="card-divider"></div>
+        <p class="card-tagline">Purity in every breath. Cool, fluid, and endlessly refreshing — like morning dew on still water.</p>
+        <a href="#collection" class="card-cta">Explore Water</a>
       </div>
-      <div class="collection-row reveal reveal-delay-2">
-        <span class="col-num">03</span>
-        <span class="col-name">Zephyr — Wind</span>
-        <span class="col-desc">The essence of effortless freedom. Green tea, bergamot, and light cedar.</span>
-        <span class="col-tag">Wind</span>
+
+      <!-- WIND -->
+      <div class="element-card card-wind reveal reveal-delay-2">
+        <div class="card-bg-icon">W</div>
+        <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 26 C16 18 20 28 26 20 C32 12 36 24 42 18" stroke="#EDEBDD" stroke-width="0.8" fill="none"/>
+          <path d="M16 34 C20 26 24 34 30 28 C36 22 40 30 44 26" stroke="#EDEBDD" stroke-width="0.8" fill="none" opacity="0.55"/>
+          <circle cx="18" cy="18" r="2"   stroke="#EDEBDD" stroke-width="0.6"/>
+          <circle cx="34" cy="32" r="1.5" stroke="#EDEBDD" stroke-width="0.6" opacity="0.5"/>
+        </svg>
+        <span class="card-accent">Wind Element</span>
+        <div class="card-number">03</div>
+        <div class="card-subtitle">Zephyr</div>
+        <h3 class="card-name">Wind</h3>
+        <div class="card-divider"></div>
+        <p class="card-tagline">The essence of effortless freedom. Light, airy, and untethered — carrying you wherever the breeze leads.</p>
+        <a href="#collection" class="card-cta">Explore Wind</a>
       </div>
-      <div class="collection-row reveal reveal-delay-3">
-        <span class="col-num">04</span>
-        <span class="col-name">Ignite — Fire</span>
-        <span class="col-desc">Ignite your inner bold. Oud, black pepper, smoked leather, and dark resins.</span>
-        <span class="col-tag">Fire</span>
+
+      <!-- FIRE -->
+      <div class="element-card card-fire reveal reveal-delay-3">
+        <div class="card-bg-icon">I</div>
+        <svg class="card-icon-svg" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26 44 C26 44 12 34 14 22 C16 16 22 12 22 12 C20 20 24 22 24 22 C22 14 28 8 30 6 C28 18 36 20 34 30 C32 36 38 34 38 34 C36 42 26 44 26 44Z" stroke="#630000" stroke-width="0.8" fill="none"/>
+          <path d="M26 44 C26 44 18 38 20 30 C22 26 26 26 26 26 C24 32 28 34 28 34 C30 28 34 30 32 36 C30 40 26 44 26 44Z" stroke="#630000" stroke-width="0.6" fill="none" opacity="0.6"/>
+        </svg>
+        <span class="card-accent">Fire Element</span>
+        <div class="card-number">04</div>
+        <div class="card-subtitle">Ignite</div>
+        <h3 class="card-name">Fire</h3>
+        <div class="card-divider"></div>
+        <p class="card-tagline">Ignite your inner bold. Fierce, passionate, and unforgettable — a flame that never goes out.</p>
+        <a href="#collection" class="card-cta">Explore Fire</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── PERSONA ─── -->
+  <section id="persona">
+    <div class="section-label reveal">The Lumina Way</div>
+    <h2 class="section-title reveal reveal-delay-1">Crafted for<br><em>your persona</em></h2>
+    <div class="persona-grid">
+      <div class="persona-item reveal">
+        <div class="persona-item-num">01</div>
+        <h3 class="persona-item-title">Identity First</h3>
+        <p class="persona-item-text">Every Lumina fragrance begins with a person, not a formula. We design scents that mirror who you are on the inside and project it beautifully outward.</p>
+      </div>
+      <div class="persona-item reveal reveal-delay-1">
+        <div class="persona-item-num">02</div>
+        <h3 class="persona-item-title">Elemental Harmony</h3>
+        <p class="persona-item-text">Our four-element framework connects ancient wisdom with modern perfumery, creating a language of scent that speaks to your deepest nature.</p>
+      </div>
+      <div class="persona-item reveal reveal-delay-2">
+        <div class="persona-item-num">03</div>
+        <h3 class="persona-item-title">A Scent That Lingers</h3>
+        <p class="persona-item-text">Quality that endures. Our fragrances are formulated to remain — on your skin, in a room, in memory — long after the moment has passed.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- BRAND PALETTE -->
-<div id="brand-palette">
-  <span class="palette-label">Brand Palette</span>
-  <div class="palette-swatches">
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#1B1717; border: 1px solid rgba(237,235,221,0.15);"></div>
-      <span class="swatch-name">Noir Black</span>
-      <span class="swatch-hex">#1B1717</span>
+  <!-- ─── COLLECTION LIST ─── -->
+  <section id="collection">
+    <div class="collection-inner">
+      <div class="collection-header">
+        <div class="section-label reveal">The Full Range</div>
+        <h2 class="section-title reveal reveal-delay-1">Shop the<br><em>Collection</em></h2>
+      </div>
+      <div class="collection-list">
+        <div class="collection-row reveal">
+          <span class="col-num">01</span>
+          <span class="col-name">Terra — Earth</span>
+          <span class="col-desc">The scent of grounded confidence. Sandalwood, vetiver, and warm amber.</span>
+          <span class="col-tag">Earth</span>
+        </div>
+        <div class="collection-row reveal reveal-delay-1">
+          <span class="col-num">02</span>
+          <span class="col-name">Aqua — Water</span>
+          <span class="col-desc">Purity in every breath. Sea salt, white musk, and fresh aquatic florals.</span>
+          <span class="col-tag">Water</span>
+        </div>
+        <div class="collection-row reveal reveal-delay-2">
+          <span class="col-num">03</span>
+          <span class="col-name">Zephyr — Wind</span>
+          <span class="col-desc">The essence of effortless freedom. Green tea, bergamot, and light cedar.</span>
+          <span class="col-tag">Wind</span>
+        </div>
+        <div class="collection-row reveal reveal-delay-3">
+          <span class="col-num">04</span>
+          <span class="col-name">Ignite — Fire</span>
+          <span class="col-desc">Ignite your inner bold. Oud, black pepper, smoked leather, and dark resins.</span>
+          <span class="col-tag">Fire</span>
+        </div>
+      </div>
     </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#EDEBDD; border: 1px solid rgba(27,23,23,0.15);"></div>
-      <span class="swatch-name">Cotton</span>
-      <span class="swatch-hex">#EDEBDD</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#630000;"></div>
-      <span class="swatch-name">Maroon</span>
-      <span class="swatch-hex">#630000</span>
+  </section>
+
+  <!-- ─── BRAND PALETTE ─── -->
+  <div id="brand-palette">
+    <span class="palette-label">Brand Palette</span>
+    <div class="palette-swatches">
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#1B1717; border: 1px solid rgba(237,235,221,0.15);"></div>
+        <span class="swatch-name">Noir Black</span>
+        <span class="swatch-hex">#1B1717</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#EDEBDD; border: 1px solid rgba(27,23,23,0.15);"></div>
+        <span class="swatch-name">Cotton</span>
+        <span class="swatch-hex">#EDEBDD</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#630000;"></div>
+        <span class="swatch-name">Maroon</span>
+        <span class="swatch-hex">#630000</span>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- CTA BANNER -->
-<section id="cta-banner">
-  <div class="cta-inner">
-    <p class="cta-subtitle">Ready to find your element?</p>
-    <h2 class="cta-title">Your scent<br><em>awaits you.</em></h2>
-    <a href="#collection" class="cta-btn">Explore All Fragrances</a>
-  </div>
-</section>
+  <!-- ─── CTA BANNER ─── -->
+  <section id="cta-banner">
+    <div class="cta-inner">
+      <p class="cta-subtitle">Ready to find your element?</p>
+      <h2 class="cta-title">Your scent<br><em>awaits you.</em></h2>
+      <a href="#collection" class="cta-btn">Explore All Fragrances</a>
+    </div>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <p class="footer-copy">© 2026 Lumina. All rights reserved.<br>By Muhammad AlShinnawy</p>
-  <div class="footer-logo">Lumina</div>
-  <ul class="footer-links">
-    <li><a href="#">Instagram</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-</footer>
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <p class="footer-copy">© 2026 Lumina. All rights reserved.<br>By Muhammad AlShinnawy</p>
+    <div class="footer-logo">Lumina</div>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </footer>
 
-<script>
-  // Custom cursor
-  const dot = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    dot.style.left = mouseX + 'px';
-    dot.style.top = mouseY + 'px';
-  });
-
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    ring.style.left = ringX + 'px';
-    ring.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  document.querySelectorAll('a, button, .element-card, .collection-row').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      ring.style.width = '56px'; ring.style.height = '56px';
-      ring.style.borderColor = 'rgba(99,0,0,0.6)';
-    });
-    el.addEventListener('mouseleave', () => {
-      ring.style.width = '36px'; ring.style.height = '36px';
-      ring.style.borderColor = 'rgba(237,235,221,0.5)';
-    });
-  });
-
-  // Navbar scroll
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
-
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
+  <!-- JavaScript -->
+  <script src="main.js"></script>
 </body>
 </html>
